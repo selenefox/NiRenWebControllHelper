@@ -33,8 +33,8 @@ public class NiRenSimpleServer {
         listener.postCMD(ip, cmd);
     }
 
-    public void refreshDeviceInfo(String ip){
-        listener.refreshDeviceStatus(ip);
+    public void setupDOChannel(String ip, int num, boolean isOpen){
+        listener.setupDOChannel(ip, num, isOpen);
     }
 
 }

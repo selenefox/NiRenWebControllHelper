@@ -39,7 +39,7 @@ public class NRServerListener implements Runnable{
         if(threadmark) {
             threadmark = false;
             try {
-                mainthread.join(5000);
+                mainthread.join(1000);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -68,10 +68,11 @@ public class NRServerListener implements Runnable{
         }
     }
 
-    public void refreshDeviceStatus(String ip){
+    public void setupDOChannel(String ip,int num, boolean isOpen){
         NRServerHandel handel = devicesThreadMap.get(ip);
         if(handel != null){
-            handel.refreshIOChn();
+            handel.setupDOChannel(num, isOpen);
+            handel.refreshDOChannelStatus(num);
         }
     }
 

@@ -49,7 +49,7 @@ public class NRServerHandel {
                             writeCMD(cmd);
                         }
                         try {
-                            TimeUnit.SECONDS.sleep(1);
+                            TimeUnit.MILLISECONDS.sleep(500);
                         } catch (InterruptedException ie) {
                             threadmark = false;
                         }
@@ -70,17 +70,15 @@ public class NRServerHandel {
                                     cache.add(out);
                                 }
                             System.out.println(out);
-                        }else{
-                            try {
-                                TimeUnit.SECONDS.sleep(1);
-                            } catch (InterruptedException ie) {
-                                threadmark = false;
-                            }
                         }
                     }
                     System.out.println(deviceinfo.getIp()+":设备 readThread close.");
                 });
                 readThread.start();
+                try{
+                    TimeUnit.SECONDS.sleep(1);
+                }catch (Exception ignored){}
+                refreshIOChn();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
@@ -176,7 +174,7 @@ public class NRServerHandel {
     /**
      * 刷新所有IO端口状态及端口数量信息
      */
-    public void refreshIOChn(){
+    private void refreshIOChn(){
         boolean t = processCMDPollMark;
         processCMDPollMark = false;
         cache.clear();
@@ -217,5 +215,31 @@ public class NRServerHandel {
             deviceinfo.setDiChn(diChn);
         }
         processCMDPollMark = t;
+    }
+
+    /**
+     * 设置DO通道的开关情况
+     * @param channelNum 通道号 从1 开始 0 表示全部
+     * @param isOpen true:1 false:0
+     */
+    public void setupDOChannel(int channelNum, boolean isOpen){
+        postCMD("AT+STACH"+channelNum+"="+(isOpen?"1":"0"));
+    }
+    /**
+     * 设置DO通道的开关情况
+     * @param channelNum 通道号 从1 开始 0 表示全部
+     * @param time 延时 isOpen状态后再取反
+     * @param isOpen true:1 false:0
+     */
+    public void setupDOChannelEx(int channelNum, int time, boolean isOpen){
+        postCMD("AT+STACH"+channelNum+"="+(isOpen?"1":"0")+","+time);
+    }
+
+    /**
+     * 刷新设备DO通道状态
+     * @param channelNum 通道号 从1 开始 0 表示全部
+     */
+    public void refreshDOChannelStatus(int channelNum){
+        postCMD("AT+STACH"+channelNum+"=?");
     }
 }

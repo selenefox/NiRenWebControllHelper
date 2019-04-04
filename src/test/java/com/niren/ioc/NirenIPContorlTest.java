@@ -22,9 +22,11 @@ public class NirenIPContorlTest {
                 String ip = cmd.split(":")[1];
                 String c = cmd.split(":")[2];
                 server.postCMD(ip,c);
-            }else if(cmd.indexOf("R:") == 0){
+            }else if(cmd.indexOf("O:") == 0){
                 String ip = cmd.split(":")[1];
-                server.refreshDeviceInfo(ip);
+                String n = cmd.split(":")[2];
+                String c = cmd.split(":")[3];
+                server.setupDOChannel(ip, Integer.valueOf(n),c.equals("1"));
             }
             cmd = scanner.nextLine();
         }
